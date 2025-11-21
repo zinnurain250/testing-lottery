@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ট্রাভেল লটারি রেজিস্ট্রেশন</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        /* Container Styles */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4a 100%);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .header h1 {
+            color: #2d3748;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            color: #4a5568;
+            font-size: 1.2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Form Container */
+        .form-container {
+            padding: 40px;
+        }
+
+        /* Rules Section */
+        .rules-section {
+            background: linear-gradient(135deg, #e6fffa 0%, #b2f5ea 100%);
+            border: 2px solid #38b2ac;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .rules-section h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .rules-section h3::before {
+            content: '⚠️';
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+
+        .rules-list {
+            list-style: none;
+            color: #2d3748;
+        }
+
+        .rules-list li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .rules-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #38b2ac;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2d3748;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #ffd700;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-group input:valid {
+            border-color: #48bb78;
+        }
+
+        /* Checkbox Styles */
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #fff5cd 0%, #fef3c7 100%);
+            border-radius: 12px;
+            border: 2px solid #f59e0b;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+            transform: scale(1.3);
+            accent-color: #ffd700;
+        }
+
+        .checkbox-group label {
+            color: #92400e;
+            font-weight: 600;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.6);
+        }
+
+        .submit-btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Success Message */
+        .success-container {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border: 3px solid #28a745;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            color: #155724;
+        }
+
+        .success-message h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .success-message h2::before {
+            content: '✅ ';
+            font-size: 2.5rem;
+        }
+
+        .confirmation-box {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border: 3px solid #ffc107;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            color: #856404;
+        }
+
+        .confirmation-box h3 {
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        /* Countdown Timer */
+        .countdown-container {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 3px solid #2196f3;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            color: #0d47a1;
+        }
+
+        .countdown-container h3 {
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .countdown-display {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            min-width: 80px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .countdown-number {
+            display: block;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1565c0;
+        }
+
+        .countdown-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Error Message */
+        .error-message {
+            color: #e53e3e;
+            background: #fed7d7;
+            border: 1px solid #feb2b2;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+
+            .countdown-display {
+                gap: 10px;
+            }
+
+            .countdown-item {
+                min-width: 60px;
+                padding: 10px;
+            }
+
+            .countdown-number {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .form-container {
+                padding: 15px;
+            }
+
+            .rules-section {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1>🏖️ ট্রাভেল লটারি</h1>
+            <p>সীমিত সুযোগ! আপনিই হতে পারেন সৌভাগ্যবান বিজয়ী</p>
+        </div>
+
+        <!-- Form Section -->
+        <div class="form-container" id="formContainer">
+            <!-- Rules Section -->
+            <div class="rules-section">
+                <h3>গুরুত্বপূর্ণ নিয়মাবলী</h3>
+                <ul class="rules-list">
+                    <li>এই ফর্মটি একবারই পূরণ করা যাবে, একের অধিক হলে অটোমেটিক বাতিল হয়ে যাবে</li>
+                    <li>ফর্মে অবশ্যই একটি সচল ও রিচযোগ্য মোবাইল নম্বর দিন (যাতে কল করার সঙ্গে সঙ্গে আপনাকে পাওয়া যায়)</li>
+                    <li>লটারিতে বিজয়ী হলে কুপন ইনফোকার্ড এবং প্রদত্ত মোবাইল নম্বর দেখাতে হবে, অন্যথায় পুরস্কার বাতিল হবে</li>
+                    <li>তথ্য মিথ্যা দিলে আপনার অংশগ্রহণ বাতিল করা হবে</li>
+                </ul>
+            </div>
+
+            <!-- Registration Form -->
+            <form id="lotteryForm">
+                <div class="form-group">
+                    <label for="fullName">পূর্ণ নাম *</label>
+                    <input type="text" id="fullName" name="fullName" required 
+                           placeholder="আপনার পূর্ণ নাম লিখুন">
+                </div>
+
+                <div class="form-group">
+                    <label for="phoneNumber">মোবাইল নম্বর * (সঠিক নম্বর দিন)</label>
+                    <input type="tel" id="phoneNumber" name="phoneNumber" required 
+                           placeholder="01XXXXXXXXX" pattern="01[3-9]\d{8}">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">ইমেইল ঠিকানা *</label>
+                    <input type="email" id="email" name="email" required 
+                           placeholder="example@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="address">সম্পূর্ণ ঠিকানা *</label>
+                    <input type="text" id="address" name="address" required 
+                           placeholder="গ্রাম/এলাকা, উপজেলা, জেলা">
+                </div>
+                <div class="form-group">
+                    <label for="fishNumber">কুপন ইনফোকার্ডে শুটকি মাছ কত নাম্বারে আছে? * (শুধু সংখ্যা লিখুন)</label>
+                    <input type="text" id="fishNumber" name="fishNumber" required 
+       placeholder="ইনফোকার্ডে আমাদের প্রোডাক্ট সমূহ অংশে দেয়া আছে">
+                </div>
+
+                <div class="form-group">
+                    <label for="destination">পছন্দের গন্তব্য *</label>
+                    <select id="destination" name="destination" required>
+                        <option value="">গন্তব্য নির্বাচন করুন</option>
+                        <option value="Cox's Bazar">কক্সবাজার</option>
+                        <option value="Sylhet">সিলেট</option>
+                        <option value="Sundarbans">বান্দরবান</option>
+                        <option value="Saint Martin">সেন্ট মার্টিন</option>
+                    </select>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="consent" name="consent" required>
+                    <label for="consent">
+                        আমি লটারিতে অংশ নিতে রাজি এবং নির্দেশনা পড়ে দেখেছি
+                    </label>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span class="spinner" id="spinner"></span>
+                    <span id="btnText">লটারিতে অংশগ্রহণ করুন</span>
+                </button>
+
+                <div class="error-message" id="errorMessage"></div>
+            </form>
+        </div>
+
+        <!-- Success Section -->
+        <div class="success-container" id="successContainer">
+            <div class="success-message">
+                <h2>আপনার তথ্য সফলভাবে লটারিতে যুক্ত হয়েছে।</h2>
+            </div>
+
+            <div class="confirmation-box">
+                <h3>📄 গুরুত্বপূর্ণ তথ্য</h3>
+                <p><strong>আপনার ইনফরমেশন আমাদের সিস্টেমে সংরক্ষিত হয়েছে।</strong></p>
+                <p>অনুগ্রহ করে কুপন ইনফোকার্ড ভালোভাবে রেখে দিন। আপনি যদি লটারিতে বিজয়ী হন, কুপন ইনফোকার্ড এবং আপনার প্রদানকৃত মোবাইল নম্বর যাচাই করে ট্যুর নিশ্চিত করা হবে। এবং পরবর্তীতে কুপন ইনফোকার্ড দেখিয়ে মধু কিনলে ৳100 ডিসকাউন্ট পাবেন</p>
+            </div>
+
+            <div class="countdown-container">
+                <h3>🎯 বিজয়ী ঘোষণার বাকি সময়</h3>
+                <div class="countdown-display" id="countdownDisplay">
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="months">6</span>
+                        <div class="countdown-label">মাস</div>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="days">0</span>
+                        <div class="countdown-label">দিন</div>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="hours">0</span>
+                        <div class="countdown-label">ঘন্টা</div>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="minutes">0</span>
+                        <div class="countdown-label">মিনিট</div>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="seconds">0</span>
+                        <div class="countdown-label">সেকেন্ড</div>
+                    </div>
+                </div>
+                <div style="text-align:center; margin-top: 20px;">
+    <button onclick="window.location.href='https://susthojibon.com'" 
+            style="padding: 15px 30px; background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); 
+                   color: white; border: none; border-radius: 12px; font-size: 1.2rem; 
+                   font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4);">
+        নতুন অফারগুলো দেখুন
+    </button>
+</div>
+
+            </div>
+        </div>
+    </div>
+
+   <script>
+    // Configuration - Replace with your actual Telegram bot token and chat ID
+    const TELEGRAM_CONFIG = {
+        botToken: '8129395665:AAE-ER4JrfZWbc1LVR2yJz-OmDfxXRUQdFM', // Replace with your bot token
+        chatId: '8246858767'       // Replace with your chat ID
+    };
+
+    // DOM Elements
+    const form = document.getElementById('lotteryForm');
+    const formContainer = document.getElementById('formContainer');
+    const successContainer = document.getElementById('successContainer');
+    const submitBtn = document.getElementById('submitBtn');
+    const spinner = document.getElementById('spinner');
+    const btnText = document.getElementById('btnText');
+    const errorMessage = document.getElementById('errorMessage');
+
+    // Phone number validation for Bangladesh
+    const phonePattern = /^01[3-9]\d{8}$/;
+
+    // Form submission handler
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Show loading state
+        showLoading(true);
+        hideError();
+
+        try {
+            // Get form data
+            const formData = new FormData(form);
+            const data = {
+                fullName: formData.get('fullName'),
+                phoneNumber: formData.get('phoneNumber'),
+                email: formData.get('email'),
+                address: formData.get('address'),
+                fishNumber: formData.get('fishNumber'),
+                destination: formData.get('destination'),
+                consent: formData.get('consent'),
+                timestamp: new Date().toLocaleString('bn-BD', {
+                    timeZone: 'Asia/Dhaka',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
+            };
+
+            // Validate phone number
+            if (!phonePattern.test(data.phoneNumber)) {
+                throw new Error('অনুগ্রহ করে একটি বৈধ বাংলাদেশি মোবাইল নম্বর দিন (01XXXXXXXXX)');
+            }
+
+            // শুটকি মাছের ভ্যালিডেশন
+            const fishNumberInput = document.getElementById('fishNumber');
+            const fishNumberValue = fishNumberInput.value.trim();
+
+            if (!['9', '09', '৯', '০৯'].includes(fishNumberValue)) {
+                throw new Error('অনুগ্রহ করে কুপন ইনফোকার্ড অনুযায়ী সঠিক সংখ্যাটি দিন');
+            }
+            
+            // Send to Netlify Function
+            await fetch('/.netlify/functions/send-telegram', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            // Show success message
+            showSuccess();
+            
+            // Start countdown timer
+            startCountdown();
+
+            // Disable form to prevent multiple submissions
+            disableForm();
+
+        } catch (error) {
+            console.error('Submission error:', error);
+            showError(error.message || 'একটি ত্রুটি ঘটেছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
+        } finally {
+            showLoading(false);
+        }
+    });
+
+    // Send data to Telegram bot
+    async function sendToTelegram(data) {
+        // এই ফাংশনটি এখন সরাসরি ব্যবহৃত হচ্ছে না, কিন্তু কোডে থাকুক ক্ষতি নেই।
+        const message = `
+🎯 নতুন লটারি রেজিস্ট্রেশন
+
+👤 নাম: ${data.fullName}
+📱 মোবাইল: ${data.phoneNumber}
+📧 ইমেইল: ${data.email}
+📍 ঠিকানা: ${data.address}
+🏖️ গন্তব্য: ${data.destination}
+⏰ সময়: ${data.timestamp}
+
+✅ সম্মতি প্রদান করা হয়েছে
+`.trim();
+
+        const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_CONFIG.botToken}/sendMessage`;
+        
+        const response = await fetch(telegramUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CONFIG.chatId,
+                text: message,
+                parse_mode: 'HTML'
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Telegram API Error: ${errorData.description || 'Unknown error'}`);
+        }
+
+        return await response.json();
+    }
+
+    // Show/hide loading state
+    function showLoading(show) {
+        if (show) {
+            spinner.style.display = 'inline-block';
+            btnText.textContent = 'পাঠানো হচ্ছে...';
+            submitBtn.disabled = true;
+        } else {
+            spinner.style.display = 'none';
+            btnText.textContent = 'লটারিতে অংশগ্রহণ করুন';
+            submitBtn.disabled = false;
+        }
+    }
+
+    // Show error message
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+        // Auto-hide after 5 seconds
+        setTimeout(hideError, 5000);
+    }
+
+    // Hide error message
+    function hideError() {
+        errorMessage.style.display = 'none';
+    }
+
+    // Show success section
+    function showSuccess() {
+        formContainer.style.display = 'none';
+        successContainer.style.display = 'block';
+        
+        // Scroll to top smoothly
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Disable form after successful submission
+    function disableForm() {
+        const inputs = form.querySelectorAll('input, select, button');
+        inputs.forEach(input => input.disabled = true);
+    }
+
+    // Countdown timer functionality
+    function startCountdown() {
+        // Set target date to 6 months from now
+        const targetDate = new Date();
+        targetDate.setMonth(targetDate.getMonth() + 6);
+        
+        // Update countdown every second
+        const countdownInterval = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = targetDate.getTime() - now;
+
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                document.getElementById('countdownDisplay').innerHTML =
+                    '<div class="countdown-item"><span class="countdown-number">🎉</span><div class="countdown-label">সময় শেষ!</div></div>';
+                return;
+            }
+
+            // Calculate time remaining
+            const months = Math.floor(distance / (1000 * 60 * 60 * 24 * 30));
+            const days = Math.floor((distance % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Update display
+            document.getElementById('months').textContent = months;
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        }, 1000);
+    }
+
+    // Input validation and formatting
+    document.getElementById('phoneNumber').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+        if (value.length > 11) value = value.slice(0, 11); // Limit to 11 digits
+        e.target.value = value;
+    });
+
+    // Real-time validation feedback
+    const inputs = form.querySelectorAll('input[required], select[required]');
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.checkValidity()) {
+                this.style.borderColor = '#48bb78';
+            } else {
+                this.style.borderColor = '#e53e3e';
+            }
+        });
+    });
+
+    // Prevent form resubmission on page refresh
+    if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
+        // Check if form was already submitted (you might want to use localStorage here)
+        // For this demo, we'll just ensure the form is in its initial state
+    }
+
+    // Add some interactive animations
+    const formGroups = document.querySelectorAll('.form-group');
+    formGroups.forEach((group, index) => {
+        group.style.animationDelay = `${index * 0.1}s`;
+        group.style.animation = 'slideUp 0.6s ease-out forwards';
+    });
+
+    // Console log for debugging (remove in production)
+    console.log('🎯 Travel Lottery Registration System Initialized');
+    console.log('📝 Remember to replace TELEGRAM_CONFIG with your actual bot token and chat ID');
+</script>
+</body>
+</html>
