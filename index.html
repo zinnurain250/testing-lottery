@@ -146,7 +146,8 @@
         }
 
         .form-group input,
-        .form-group select {
+        .form-group select,
+        .form-group textarea {
             width: 100%;
             padding: 15px;
             border: 2px solid #e2e8f0;
@@ -157,7 +158,8 @@
         }
 
         .form-group input:focus,
-        .form-group select:focus {
+        .form-group select:focus,
+        .form-group textarea:focus {
             outline: none;
             border-color: #ffd700;
             background: white;
@@ -456,6 +458,30 @@
                     </select>
                 </div>
 
+                <!-- New: Customer message (optional) -->
+                <div class="form-group">
+                    <label for="message">আপনি যদি কিছু বলতে চান (ঐচ্ছিক)</label>
+                    <textarea id="message" name="message" rows="4" placeholder="আপনার মতামত লিখুন... (ঐচ্ছিক)"></textarea>
+                </div>
+
+                <!-- New: NPS-like rating 1-10 -->
+                <div class="form-group">
+                    <label for="likelihood">আপনি আমাদের প্রোডাক্ট সম্পর্কে অন্য কাউকে বলার চান্স কত? (1-10) *</label>
+                    <select id="likelihood" name="likelihood" required>
+                        <option value="">রেটিং নির্বাচন করুন</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+
                 <div class="checkbox-group">
                     <input type="checkbox" id="consent" name="consent" required>
                     <label for="consent">
@@ -558,6 +584,8 @@
                 address: formData.get('address'),
                 fishNumber: formData.get('fishNumber'),
                 destination: formData.get('destination'),
+                message: formData.get('message'), // new optional message
+                likelihood: formData.get('likelihood'), // new 1-10 rating
                 consent: formData.get('consent'),
                 timestamp: new Date().toLocaleString('bn-BD', {
                     timeZone: 'Asia/Dhaka',
@@ -582,12 +610,8 @@
                 throw new Error('অনুগ্রহ করে কুপন ইনফোকার্ড অনুযায়ী সঠিক সংখ্যাটি দিন');
             }
             
-            // Send to Netlify Function
-            await fetch('/.netlify/functions/send-telegram', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
+            // Send to Telegram directly from client (NOTE: exposing bot token on client is insecure for production)
+            await sendToTelegram(data);
 
             // Show success message
             showSuccess();
@@ -608,19 +632,7 @@
 
     // Send data to Telegram bot
     async function sendToTelegram(data) {
-        // এই ফাংশনটি এখন সরাসরি ব্যবহৃত হচ্ছে না, কিন্তু কোডে থাকুক ক্ষতি নেই।
-        const message = `
-🎯 নতুন লটারি রেজিস্ট্রেশন
-
-👤 নাম: ${data.fullName}
-📱 মোবাইল: ${data.phoneNumber}
-📧 ইমেইল: ${data.email}
-📍 ঠিকানা: ${data.address}
-🏖️ গন্তব্য: ${data.destination}
-⏰ সময়: ${data.timestamp}
-
-✅ সম্মতি প্রদান করা হয়েছে
-`.trim();
+        const message = `\n🎯 নতুন লটারি রেজিস্ট্রেশন\n\n👤 নাম: ${data.fullName}\n📱 মোবাইল: ${data.phoneNumber}\n📧 ইমেইল: ${data.email}\n📍 ঠিকানা: ${data.address}\n🏖️ গন্তব্য: ${data.destination}\n\n📝 কাস্টম মেসেজ: ${data.message || '(কোনো মেসেজ নেই)'}\n⭐ আমাদের প্রোডাক্ট সম্পর্কে অন্যকে বলার চান্স (1-10): ${data.likelihood}\n\n⏰ সময়: ${data.timestamp}\n\n✅ সম্মতি প্রদান করা হয়েছে\n`.trim();
 
         const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_CONFIG.botToken}/sendMessage`;
         
@@ -681,7 +693,7 @@
 
     // Disable form after successful submission
     function disableForm() {
-        const inputs = form.querySelectorAll('input, select, button');
+        const inputs = form.querySelectorAll('input, select, button, textarea');
         inputs.forEach(input => input.disabled = true);
     }
 
