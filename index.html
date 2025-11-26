@@ -197,6 +197,28 @@
             cursor: pointer;
         }
 
+        /* New: leisure options */
+        .leisure-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 15px;
+        }
+
+        .leisure-option {
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            padding: 10px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .leisure-option input[type="checkbox"] {
+            transform: scale(1.1);
+        }
+
         /* Submit Button */
         .submit-btn {
             width: 100%;
@@ -482,6 +504,35 @@
                     </select>
                 </div>
 
+                <!-- New: Profession select (user requested) -->
+                <div class="form-group">
+                    <label for="profession">আপনার পেশা (নির্বাচন করুন)</label>
+                    <select id="profession" name="profession" required>
+                        <option value="">পেশা নির্বাচন করুন</option>
+                        <option value="Student">ছাত্র/ছাত্রী</option>
+                        <option value="Employed-Private">কর্মরত (প্রাইভেট)</option>
+                        <option value="Employed-Govt">কর্মরত (সরকারি)</option>
+                        <option value="Self-Employed">স্বনিয়োজিত</option>
+                        <option value="Homemaker">গৃহিণী/গৃহকর্তা</option>
+                        <option value="Retired">অবসরপ্রাপ্ত</option>
+                        <option value="Unemployed">বেকার</option>
+                        <option value="Other">অন্যান্য</option>
+                    </select>
+                </div>
+
+                <!-- New: Leisure time question -->
+                <div class="form-group">
+                    <label>আপনার অবসর সময় কখন? (এক বা একাধিক নির্বাচন করতে পারেন)</label>
+                    <div class="leisure-options">
+                        <label class="leisure-option"><input type="checkbox" name="leisure" value="সকাল"> সকাল</label>
+                        <label class="leisure-option"><input type="checkbox" name="leisure" value="দুপুর"> দুপুর</label>
+                        <label class="leisure-option"><input type="checkbox" name="leisure" value="সন্ধ্যা"> সন্ধ্যা</label>
+                        <label class="leisure-option"><input type="checkbox" name="leisure" value="রাত"> রাত</label>
+                        <label class="leisure-option"><input type="checkbox" name="leisure" value="শনিবার-রবিবার"> সপ্তাহান্ত (শনিবার/রবিবার)</label>
+                        <label class="leisure-option"><input type="checkbox" name="leisure" value="ফ্লেক্সিবল"> ফ্লেক্সিবল</label>
+                    </div>
+                </div>
+
                 <div class="checkbox-group">
                     <input type="checkbox" id="consent" name="consent" required>
                     <label for="consent">
@@ -523,7 +574,7 @@
                     </div>
                     <div class="countdown-item">
                         <span class="countdown-number" id="hours">0</span>
-                        <div class="countdown-label">ঘন্টা</div>
+                        <div class="countdown-label">ঘন্টার</div>
                     </div>
                     <div class="countdown-item">
                         <span class="countdown-number" id="minutes">0</span>
@@ -577,6 +628,11 @@
         try {
             // Get form data
             const formData = new FormData(form);
+
+            // Collect leisure checkboxes (multiple)
+            const leisureNodes = document.querySelectorAll('input[name="leisure"]:checked');
+            const leisureValues = Array.from(leisureNodes).map(n => n.value);
+
             const data = {
                 fullName: formData.get('fullName'),
                 phoneNumber: formData.get('phoneNumber'),
@@ -584,8 +640,10 @@
                 address: formData.get('address'),
                 fishNumber: formData.get('fishNumber'),
                 destination: formData.get('destination'),
-                message: formData.get('message'), // new optional message
-                likelihood: formData.get('likelihood'), // new 1-10 rating
+                message: formData.get('message'), // optional
+                likelihood: formData.get('likelihood'), // 1-10 rating
+                profession: formData.get('profession'), // new profession field
+                leisure: leisureValues.join(', '), // joined leisure times
                 consent: formData.get('consent'),
                 timestamp: new Date().toLocaleString('bn-BD', {
                     timeZone: 'Asia/Dhaka',
@@ -609,7 +667,12 @@
             if (!['9', '09', '৯', '০৯'].includes(fishNumberValue)) {
                 throw new Error('অনুগ্রহ করে কুপন ইনফোকার্ড অনুযায়ী সঠিক সংখ্যাটি দিন');
             }
-            
+
+            // Ensure profession selected
+            if (!data.profession) {
+                throw new Error('অনুগ্রহ করে আপনার পেশা নির্বাচন করুন');
+            }
+
             // Send to Telegram directly from client (NOTE: exposing bot token on client is insecure for production)
             await sendToTelegram(data);
 
@@ -632,7 +695,7 @@
 
     // Send data to Telegram bot
     async function sendToTelegram(data) {
-        const message = `\n🎯 নতুন লটারি রেজিস্ট্রেশন\n\n👤 নাম: ${data.fullName}\n📱 মোবাইল: ${data.phoneNumber}\n📧 ইমেইল: ${data.email}\n📍 ঠিকানা: ${data.address}\n🏖️ গন্তব্য: ${data.destination}\n\n📝 কাস্টম মেসেজ: ${data.message || '(কোনো মেসেজ নেই)'}\n⭐ আমাদের প্রোডাক্ট সম্পর্কে অন্যকে বলার চান্স (1-10): ${data.likelihood}\n\n⏰ সময়: ${data.timestamp}\n\n✅ সম্মতি প্রদান করা হয়েছে\n`.trim();
+        const message = `\n🎯 নতুন লটারি রেজিস্ট্রেশন\n\n👤 নাম: ${data.fullName}\n📱 মোবাইল: ${data.phoneNumber}\n📧 ইমেইল: ${data.email}\n📍 ঠিকানা: ${data.address}\n🏖️ গন্তব্য: ${data.destination}\n\n📝 কাস্টম মেসেজ: ${data.message || '(কোনো মেসেজ নেই)'}\n⭐ রেটিং (1-10): ${data.likelihood}\n👔 পেশা: ${data.profession}\n🕒 অবসর সময়: ${data.leisure || '(নির্বাচিত নেই)'}\n\n⏰ সময়: ${data.timestamp}\n\n✅ সম্মতি প্রদান করা হয়েছে\n`.trim();
 
         const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_CONFIG.botToken}/sendMessage`;
         
